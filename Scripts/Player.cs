@@ -32,6 +32,9 @@ public class Player : KinematicBody
     {
         camera = GetNode<Camera>("Camera");
         muzzle = GetNode<Spatial>("Camera/Muzzle");
+
+        // Hide and lock mouse cursor
+        Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
     public override void _PhysicsProcess(float delta)
@@ -85,4 +88,32 @@ public class Player : KinematicBody
         }
     }
 
+    public override void _Process(float delta)
+    {
+        var newCameraRotationDegrees = camera.RotationDegrees;
+        var newPlayerRotationDegrees = RotationDegrees;
+        // rotate camera along x axis
+        newCameraRotationDegrees.x -= mouseDelta.y * lookSensitivity * delta;
+
+        // clamp camera x axis
+        newCameraRotationDegrees.x = Mathf.Clamp(newCameraRotationDegrees.x, minLookAngle, maxLookAngle);
+
+        // rotate the player along y axis
+        newPlayerRotationDegrees.y -= mouseDelta.x * lookSensitivity * delta;
+
+        // reassigning new rotation to degrees
+        camera.RotationDegrees = newCameraRotationDegrees;
+        RotationDegrees = newPlayerRotationDegrees;
+
+        // reset mouse delta vector
+        mouseDelta = Vector2.Zero;
+
+    }
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventMouseMotion ev)
+        {
+            mouseDelta = ev.Relative;
+        }
+    }
 }
