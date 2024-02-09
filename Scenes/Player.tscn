@@ -24,4 +24,4 @@ mesh = ExtResource( 1 )
 skeleton = NodePath("../..")
 
 [node name="Muzzle" type="Spatial" parent="Camera"]
-transform = Transform( 0.993171, 0.116671, 0, -0.116671, 0.993171, 0, 0, 0, 1, 0.199803, -0.125323, -1.0413 )
+transform = Transform( -0.993171, -0.116671, -8.74228e-08, -0.116671, 0.993171, 0, 8.68257e-08, 1.01997e-08, -1, 0.199803, -0.125323, -1.0413 )

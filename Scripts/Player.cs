@@ -27,11 +27,15 @@ public class Player : KinematicBody
     // components
     private Camera camera;
     private Spatial muzzle;
+    private PackedScene bulletScene;
 
     public override void _Ready()
     {
         camera = GetNode<Camera>("Camera");
         muzzle = GetNode<Spatial>("Camera/Muzzle");
+
+        bulletScene = GD.Load("res://Scenes/Bullet.tscn") as PackedScene;
+
 
         // Hide and lock mouse cursor
         Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -108,7 +112,29 @@ public class Player : KinematicBody
         // reset mouse delta vector
         mouseDelta = Vector2.Zero;
 
+
+        // check for shooting
+        if (Input.IsActionJustPressed("shoot") && ammo > 0)
+        {
+            Shoot();
+        }
+
+        if (Input.IsActionPressed("quit"))
+        {
+            GetTree().Quit();
+        }
     }
+
+    private void Shoot()
+    {
+        var bullet = bulletScene.Instance() as Area;
+        GetNode("/root/Main").AddChild(bullet);
+
+        bullet.GlobalTransform = muzzle.GlobalTransform;
+
+        ammo -= 1;
+    }
+
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseMotion ev)
